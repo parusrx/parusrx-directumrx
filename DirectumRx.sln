@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectumRx.Api", "src\DirectumRx.Api.csproj", "{A56C079F-7333-48A8-A596-C7B7C89D649C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectumRx.API", "src\DirectumRx.API.csproj", "{A56C079F-7333-48A8-A596-C7B7C89D649C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E2B6167C-6750-4230-A13B-F8304EF6A34B}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{49DA9E83-AEEA-4BB5-A01E-C0D47D47ABA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,10 @@ Global
 		{A56C079F-7333-48A8-A596-C7B7C89D649C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A56C079F-7333-48A8-A596-C7B7C89D649C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A56C079F-7333-48A8-A596-C7B7C89D649C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49DA9E83-AEEA-4BB5-A01E-C0D47D47ABA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49DA9E83-AEEA-4BB5-A01E-C0D47D47ABA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49DA9E83-AEEA-4BB5-A01E-C0D47D47ABA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49DA9E83-AEEA-4BB5-A01E-C0D47D47ABA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

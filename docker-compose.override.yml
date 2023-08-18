@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+  rabbitmq:
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  zipkin:
+    ports:
+      - "5411:9411"
+
+  dapr-placement:
+    command: ["./placement", "-port", "50000", "-log-level", "debug"]
+    ports:
+      - "50000:50000"
+  
+  gateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - PATH_BASE=/gateway
+    ports:
+      - "51001:8080"
+
+  gateway-dapr:
+    command: ["./daprd",
+      "-app-id", "gateway",
+      "-app-port", "8080",
+      "-components-path", "/components",
+      "-config", "/configuration/config.yml"
+      ]
+    volumes:
+      - "./dapr/components/:/components"
+      - "./dapr/configuration/:/configuration"
+
+  directumrx:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - TZ=${ORACLE_TZ:-Europe/Moscow}
+      - Database__Provider=${DB_PROVIDER:-Oracle}
+      - Database__ConnectionString=${DB_CONNECTION_STRING:-User Id=username;Password=password;Data Source=localhost:1521/meta8561}
+      - PATH_BASE=/directumrx
+    ports:
+      - "51002:8080"
+
+  directumrx-dapr:
+    command: ["./daprd",
+      "-app-id", "directumrx",
+      "-app-port", "8080",
+      "-components-path", "/components",
+      "-config", "/configuration/config.yml"
+      ]
+    volumes:
+      - "./dapr/components/:/components"
+      - "./dapr/configuration/:/configuration"

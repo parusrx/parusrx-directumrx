@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
+  zipkin:
+    image: openzipkin/zipkin-slim
+
+  dapr-placement:
+    image: "daprio/dapr:1.11.0"
+
+  gateway:
+    image: ${REGISTRY:-parusrx}/gateway:${TAG:-latest}
+
+  gateway-dapr:
+    image: "daprio/daprd:1.11.0"
+    network_mode: "service:gateway"
+    depends_on:
+      - gateway
+
+  directumrx:
+    image: ${REGISTRY:-parusrx}/directumrx:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+
+  directumrx-dapr:
+    image: "daprio/dapr:1.11.0"
+    network_mode: "service:directumrx"
+    depends_on:
+      - directumrx
