@@ -4,27 +4,26 @@
 using System.ComponentModel.Design;
 using System.Xml;
 using Microsoft.Extensions.Logging;
-using ParusRx.Services.DirectumRx.Api.Models;
 
-namespace ParusRx.Services.DirectumRx.Api.Services;
+namespace ParusRx.DirectumRx.Services.Oracle;
 
 /// <summary>
 /// Default credentials store.
 /// </summary>
 /// <seealso cref="IDrxSheduledService"/>
 
-public class DrxSheduledService : IDrxSheduledService
+public class DrxOracleSheduledService : IDrxSheduledService
 {
     private readonly IConnection _connection;
-    private readonly ILogger<DrxSheduledService> _logger;
+    private readonly ILogger<DrxOracleSheduledService> _logger;
     private readonly IDrxPartyService _drxPartyService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DrxSheduledService"/> class.
+    /// Initializes a new instance of the <see cref="DrxOracleSheduledService"/> class.
     /// </summary>
     /// <param name="connection">The connection on database.</param>
     /// <param name="logger">The logger to use.</param>
-    public DrxSheduledService(IConnection connection, ILogger<DrxSheduledService> logger, IDrxPartyService drxPartyService)
+    public DrxOracleSheduledService(IConnection connection, ILogger<DrxOracleSheduledService> logger, IDrxPartyService drxPartyService)
     {
         _connection = connection;
         _logger = logger;
@@ -40,23 +39,23 @@ public class DrxSheduledService : IDrxSheduledService
             connection.Open();
             using var transaction = connection.BeginTransaction();
 
-                var cmd = new OracleCommand
+            var cmd = new OracleCommand
 
-                {
-                    Connection = (OracleConnection)connection,
-                    CommandType = CommandType.StoredProcedure,
-                    Transaction = (OracleTransaction)transaction,
-                    CommandText = "parus.p_drxedmjr_pck_life_cycle"
-                };
+            {
+                Connection = (OracleConnection)connection,
+                CommandType = CommandType.StoredProcedure,
+                Transaction = (OracleTransaction)transaction,
+                CommandText = "parus.p_drxedmjr_pck_life_cycle"
+            };
 
-                var paramConnect = cmd.CreateParameter();
-                paramConnect.OracleDbType = OracleDbType.Blob;
-                paramConnect.Direction = ParameterDirection.Input;
-                paramConnect.ParameterName = "bcontent";
-                paramConnect.Value = XmlSerializerUtility.Serialize(packagesLifeCycle);
-                cmd.Parameters.Add(paramConnect);
+            var paramConnect = cmd.CreateParameter();
+            paramConnect.OracleDbType = OracleDbType.Blob;
+            paramConnect.Direction = ParameterDirection.Input;
+            paramConnect.ParameterName = "bcontent";
+            paramConnect.Value = XmlSerializerUtility.Serialize(packagesLifeCycle);
+            cmd.Parameters.Add(paramConnect);
 
-                cmd.ExecuteNonQuery();
+            cmd.ExecuteNonQuery();
 
             transaction.Commit();
             return "Ok";
@@ -145,7 +144,7 @@ public class DrxSheduledService : IDrxSheduledService
                     if (trrc != 0)
                         paramAGN.Value = trrc;
                     cmdAGENT.Parameters.Add(paramAGN);
-                        
+
                     paramAGN = cmdAGENT.CreateParameter();
                     paramAGN.OracleDbType = OracleDbType.Int64;
                     paramAGN.Direction = ParameterDirection.Output;
@@ -366,7 +365,7 @@ public class DrxSheduledService : IDrxSheduledService
                         CreateEDMJRDocument(connection, transaction, authorizationDrxEQI, nEDMJR, exchangeQueueItem.LeadingDocument, 1);
 
                         /// Добавление дополнительных документов в спецификацию журнала взаимодействия с DirectuRX
-                        foreach(var attachment in exchangeQueueItem.Attachments)
+                        foreach (var attachment in exchangeQueueItem.Attachments)
                         {
                             CreateEDMJRDocument(connection, transaction, authorizationDrxEQI, nEDMJR, attachment, 0);
                         }
@@ -377,7 +376,7 @@ public class DrxSheduledService : IDrxSheduledService
                 }
             }
 
-                        transaction.Commit();
+            transaction.Commit();
             return "Ok";
         }
         catch (Exception ex)

@@ -5,23 +5,23 @@ using System.Drawing;
 using Dapper;
 using Microsoft.Extensions.Logging;
 
-namespace ParusRx.Services.DirectumRx.Api.Integration.Stores;
+namespace ParusRx.DirectumRx.Integration.Stores.Oracle;
 
 /// <summary>
 /// Default credentials store.
 /// </summary>
 /// <seealso cref="IDrxScheduledStore"/>
-public class DrxScheduledStore : IDrxScheduledStore
+public class DrxOracleScheduledStore : IDrxScheduledStore
 {
     private readonly IConnection _connection;
-    private readonly ILogger<DrxScheduledStore> _logger;
+    private readonly ILogger<DrxOracleScheduledStore> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DrxScheduledStore"/> class.
     /// </summary>
     /// <param name="connection">The connection on database.</param>
     /// <param name="logger">The logger to use.</param>
-    public DrxScheduledStore(IConnection connection, ILogger<DrxScheduledStore> logger)
+    public DrxOracleScheduledStore(IConnection connection, ILogger<DrxOracleScheduledStore> logger)
     {
         _connection = connection;
         _logger = logger;

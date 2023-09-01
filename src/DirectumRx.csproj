@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="7.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Oracle" Version="7.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="7.1.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="7.0.0" />
+    <PackageReference Include="Dapper" Version="2.0.151" />
+    <PackageReference Include="Dapr.AspNetCore" Version="1.11.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageReference Include="Npgsql" Version="8.0.0-preview.4" />
+    <PackageReference Include="ParusRx.EventBus.Dapr" Version="1.0.0-rc.1.5975920134.9" />
+    <PackageReference Include="ParusRx.Storage.Oracle" Version="1.0.0-rc.1.5975920134.9" />
+    <PackageReference Include="ParusRx.Storage.PostgreSql" Version="1.0.0-rc.1.5975920134.9" />
+    <PackageReference Include="ParusRx.Xml" Version="1.0.0-rc.1.5975920134.9" />
+    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="Serilog.Sinks.Http" Version="9.0.0-beta.1" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.3-dev-00262" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+</Project>

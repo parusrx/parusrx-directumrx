@@ -3,7 +3,7 @@
 
 using ParusRx.EventBus;
 
-namespace ParusRx.Services.DirectumRx.Api.Integration;
+namespace ParusRx.DirectumRx.Integration;
 
 /// <summary>
 /// Defines methods for connect parties.

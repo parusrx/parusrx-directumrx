@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Parusnik. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using ParusRx.DirectumRx.Integration.Stores;
 using Serilog;
 public static partial class Program
 {
-    public const string AppName = "DirectumRx.Api";
+    public const string AppName = "DirectumRx";
 
     /// <summary>
     /// Adds Serilog to the specified <see cref="WebApplicationBuilder"/>.
@@ -100,6 +101,8 @@ public static partial class Program
             builder.Services
                 .AddDataAccess(options => options.UsePostgreSql(builder.Configuration["Database:ConnectionString"]))
                 .AddPostgresParusRxStore();
+
+            AppContext.SetSwitch("Npgsql.EnableStoredProcedureCompatMode", true);
         }
     }
 
@@ -132,9 +135,21 @@ public static partial class Program
     {
         builder.Services.AddHttpClient<IDrxPartyService, DrxPartyService>();
 
+        var provider = builder.Configuration["Database:Provider"];
+
+        if (provider == "Oracle")
+        {
+            builder.Services.AddScoped<IDrxSheduledService, DrxOracleSheduledService>();
+            builder.Services.AddScoped<IDrxScheduledStore, DrxOracleScheduledStore>();
+        }
+        else if (provider == "Postgres")
+        {
+            builder.Services.AddScoped<IDrxSheduledService, DrxPostgresSheduledService>();
+            builder.Services.AddScoped<IDrxScheduledStore, DrxPostgresScheduledStore>();
+        }
+
         builder.Services.AddScoped<IDrxPartyEventService, DrxPartyEventService>();
-        builder.Services.AddScoped<IDrxSheduledService, DrxSheduledService>();
-        builder.Services.AddScoped<IDrxScheduledStore, DrxScheduledStore>();
+        
 
         builder.Services.AddTransient<ConnectHandler>();
         builder.Services.AddTransient<BusinessUnitHandler>();

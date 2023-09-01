@@ -8,6 +8,6 @@ spec:
   version: v1
   metadata:
   - name: schedule
-    value: "@every 10s"
-scopes:
-- directumrx
+    value: "@every 1m"
+# scopes:
+# - directumrx

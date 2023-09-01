@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Parusnik. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-namespace ParusRx.Services.DirectumRx.Api.Integration.Stores;
+namespace ParusRx.DirectumRx.Integration.Stores;
 
 /// <summary>
 /// Provides methods allowing to retrieve credentials stored in a database.

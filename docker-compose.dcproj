@@ -7,7 +7,7 @@
     <ProjectGuid>49da9e83-aeea-4bb5-a01e-c0d47d47aba5</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
-    <DockerServiceName>directumrx.api</DockerServiceName>
+    <DockerServiceName>directumrx</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

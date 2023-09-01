@@ -3,7 +3,7 @@
 
 using System.Net;
 
-namespace ParusRx.Services.DirectumRx.Api.Controllers;
+namespace ParusRx.DirectumRx.Controllers;
 
 /// <summary>
 /// Represents the Scheduled controller.

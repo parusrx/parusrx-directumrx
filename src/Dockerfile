@@ -8,16 +8,16 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Directory.Build.props", "."]
-COPY ["src/DirectumRx.API.csproj", "src/"]
-RUN dotnet restore "src/DirectumRx.API.csproj"
+COPY ["src/DirectumRx.csproj", "src/"]
+RUN dotnet restore "src/DirectumRx.csproj"
 COPY . .
 WORKDIR "/src/src"
-RUN dotnet build "DirectumRx.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "DirectumRx.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "DirectumRx.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "DirectumRx.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "DirectumRx.API.dll"]
+ENTRYPOINT ["dotnet", "DirectumRx.dll"]

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Parusnik. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-namespace ParusRx.Services.DirectumRx.Api.Models;
+namespace ParusRx.DirectumRx.Models;
 
 /// <summary>
 /// Packages of documents from Parus 8

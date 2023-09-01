@@ -41,12 +41,12 @@ services:
       - Database__ConnectionString=${DB_CONNECTION_STRING:-User Id=username;Password=password;Data Source=localhost:1521/meta8561}
       - PATH_BASE=/directumrx
     ports:
-      - "51002:8080"
+      - "51002:80"
 
   directumrx-dapr:
     command: ["./daprd",
       "-app-id", "directumrx",
-      "-app-port", "8080",
+      "-app-port", "80",
       "-components-path", "/components",
       "-config", "/configuration/config.yml"
       ]

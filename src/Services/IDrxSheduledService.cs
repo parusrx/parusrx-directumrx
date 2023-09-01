@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Parusnik. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using ParusRx.Services.DirectumRx.Api.Models;
-
-namespace ParusRx.Services.DirectumRx.Api.Services;
+namespace ParusRx.DirectumRx.Services;
 
 public interface IDrxSheduledService
 {

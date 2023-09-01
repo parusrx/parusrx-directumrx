@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Parusnik. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-namespace ParusRx.Services.DirectumRx.Api.Models;
+namespace ParusRx.DirectumRx.Models;
 
 /// <summary>
 /// Represents an Contract(registration number and date).
@@ -44,6 +44,12 @@ public class Contract
     [JsonPropertyName("Rn")]
     [XmlElement(ElementName = "Rn")]
     public long Rn { get; set; }
+    /// <summary>
+    /// Master document
+    /// </summary>
+    [JsonPropertyName("Master")]
+    [XmlElement(ElementName = "Master")]
+    public bool Master { get; set; }
     /// <summary>
     /// Id document kind
     /// </summary>
@@ -98,12 +104,6 @@ public class Contract
     [JsonPropertyName("RegNumb")]
     [XmlElement(ElementName = "RegNumb")]
     public string RegNumb { get; set; }
-    /// <summary>
-    /// Master document
-    /// </summary>
-    [JsonPropertyName("Master")]
-    [XmlElement(ElementName = "Master")]
-    public bool Master { get; set; }
     /// <summary>
     /// Gets or sets the Currency of the Contract.
     /// </summary>

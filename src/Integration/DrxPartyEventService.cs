@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Parusnik. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-namespace ParusRx.Services.DirectumRx.Api.Integration;
+namespace ParusRx.DirectumRx.Integration;
 
 /// <summary>
 /// An implementation of <see cref="IDrxPartyEventService"/> for integration events with DirectumRX suggestions.
@@ -31,17 +31,14 @@ public class DrxPartyEventService : IDrxPartyEventService
     public async Task FindPartyConnectAsync(MqIntegrationEvent @event)
     {
         var id = @event.Body;
-
         try
         {
             var data = await _store.ReadDataRequestAsync(id);
-
             var connectPartyRequest = XmlSerializerUtility.Deserialize<ConnectPartyRequest>(data);
             if (connectPartyRequest == null)
             {
                 throw new ArgumentException("Invalid request.");
             }
-
             var response = await _service.FindConnectAsync(connectPartyRequest);
             var responseContent = XmlSerializerUtility.Serialize(response);
 
