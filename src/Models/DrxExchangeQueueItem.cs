@@ -25,7 +25,7 @@ public class DrxExchangeQueueItem
     /// </summary>
     [JsonPropertyName("Id")]
     [XmlElement(ElementName = "Id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
     /// <summary>
     /// Name
     /// </summary>
@@ -37,7 +37,7 @@ public class DrxExchangeQueueItem
     /// </summary>
     [JsonPropertyName("BusinessUnitId")]
     [XmlElement(ElementName = "BusinessUnitId")]
-    public int BusinessUnitId { get; set; }
+    public long BusinessUnitId { get; set; }
     /// <summary>
     /// Counterparty TIN
     /// </summary>
@@ -55,19 +55,13 @@ public class DrxExchangeQueueItem
     /// </summary>
     [JsonPropertyName("EmployeeId")]
     [XmlElement(ElementName = "EmployeeId")]
-    public int EmployeeId { get; set; }
+    public long EmployeeId { get; set; }
     /// <summary>
-    /// Leading document
-    /// </summary>
-    [JsonPropertyName("LeadingDocument")]
-    [XmlElement(ElementName = "LeadingDocument")]
-    public ExchangeQueueItemDocument LeadingDocument { get; set; }
-    /// <summary>
-    /// Attachments
+    /// Attacheds
     ///</summary>
-    [JsonPropertyName("Attachments")]
-    [XmlElement(ElementName = "Attachments")]
-    public List<ExchangeQueueItemDocument> Attachments { get; set; }
+    [JsonPropertyName("Attacheds")]
+    [XmlElement(ElementName = "Attacheds")]
+    public List<ExchangeQueueItemDocument> Attacheds { get; set; }
     /// <summary>
     /// Status
     /// </summary>
@@ -89,7 +83,13 @@ public class ExchangeQueueItemDocument
     /// </summary>
     [JsonPropertyName("Id")]
     [XmlElement(ElementName = "Id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
+    /// <summary>
+    /// Main document
+    /// </summary>
+    [JsonPropertyName("Main")]
+    [XmlElement(ElementName = "Main")]
+    public int Main { get; set; }
     /// <summary>
     /// Name document
     /// </summary>
@@ -99,27 +99,30 @@ public class ExchangeQueueItemDocument
     /// <summary>
     /// Identifier document type
     /// </summary>
+
     [JsonPropertyName("DocumentTypeId")]
     [XmlElement(ElementName = "DocumentTypeId")]
-    public int DocumentTypeId { get; set; }
+    public long DocumentTypeId { get; set; }
     /// <summary>
     /// Identifier document kind
     /// </summary>
+
     [JsonPropertyName("DocumentKindId")]
+
     [XmlElement(ElementName = "DocumentKindId")]
-    public int DocumentKindId { get; set; }
+    public long DocumentKindId { get; set; }
     /// <summary>
     /// Identifier document group
     /// </summary>
     [JsonPropertyName("DocumentGroupId")]
     [XmlElement(ElementName = "DocumentGroupId")]
-    public int? DocumentGroupId { get; set; }
+    public long? DocumentGroupId { get; set; }
     /// <summary>
     /// Identifier document register
     /// </summary>
     [JsonPropertyName("DocumentRegisterId")]
     [XmlElement(ElementName = "DocumentRegisterId")]
-    public int? DocumentRegisterId { get; set; }
+    public long? DocumentRegisterId { get; set; }
     /// <summary>
     /// Life cycle state
     /// </summary>
@@ -196,7 +199,7 @@ public class AuthorizationDrxEQI
     /// <summary>
     /// Business unit Id
     /// </summary>
-    public int BusinessUnitId { get; set; }
+    public long BusinessUnitId { get; set; }
     /// <summary>
     /// Legal person
     /// </summary>

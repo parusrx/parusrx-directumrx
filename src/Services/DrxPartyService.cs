@@ -199,7 +199,7 @@ public class DrxPartyService : IDrxPartyService
     }
 
     /// <inheritdoc/>
-    public async Task PostExchangeQueueItemAsync(AuthorizationDrxEQI authorization, int exchangeQueueItemId, long packegeParusRn)
+    public async Task PostExchangeQueueItemAsync(AuthorizationDrxEQI authorization, long exchangeQueueItemId, long packegeParusRn)
     {
         //int ExchangeQueueItemId, int PackegeParusR
         var authorizationBytes = Encoding.UTF8.GetBytes($"{authorization?.Username}:{authorization?.Password}");

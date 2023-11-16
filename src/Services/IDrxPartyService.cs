@@ -78,5 +78,5 @@ public interface IDrxPartyService
     /// <returns>The serialized value.</returns>
     Task<DrxExchangeQueueItems> FindExchangeQueueItemAsync(AuthorizationDrxEQI authorization);
 
-    Task PostExchangeQueueItemAsync(AuthorizationDrxEQI authorization, int ExchangeQueueItemId, long PackegeParusRn);
+    Task PostExchangeQueueItemAsync(AuthorizationDrxEQI authorization, long ExchangeQueueItemId, long PackegeParusRn);
 }

@@ -24,33 +24,34 @@ public interface IDrxSheduledService
     /// </summary>
     /// <returns></returns>
     /// <seealso cref="Documents"/>
-    long GetRnDocumentType(IDbConnection connection, IDbTransaction transaction, long drxConnectRn, int documentTypeId);
+    //long GetRnDocumentType(IDbConnection connection, IDbTransaction transaction, long drxConnectRn, long documentTypeId);
 
     /// <summary>
     /// Gets rn docyment kind.
     /// </summary>
     /// <returns></returns>
     /// <seealso cref="Documents"/>
-    long GetRnDocumentKind(IDbConnection connection, IDbTransaction transaction, long drxConnectRn, long drxDocTypeRn, int documentKindId);
+    //long GetRnDocumentKind(IDbConnection connection, IDbTransaction transaction, long drxConnectRn, long drxDocTypeRn, long documentKindId);
 
     /// <summary>
     /// Gets rn docyment category.
     /// </summary>
     /// <returns></returns>
     /// <seealso cref="Documents"/>
-    long GetRnDocumentCategory(IDbConnection connection, IDbTransaction transaction, long drxConnectRn, int documentCategoryId);
+    //long GetRnDocumentCategory(IDbConnection connection, IDbTransaction transaction, long drxConnectRn, long documentCategoryId);
 
     /// <summary>
     /// Gets rn docyment register.
     /// </summary>
     /// <returns></returns>
     /// <seealso cref="Documents"/>
-    long GetRnDocumentRegister(IDbConnection connection, IDbTransaction transaction, long drxConnectRn, int documentCategoryId);
+    //long GetRnDocumentRegister(IDbConnection connection, IDbTransaction transaction, long drxConnectRn, long documentCategoryId);
 
     /// <summary>
     /// Create document EDMJR.
     /// </summary>
     /// <returns></returns>
     /// <seealso cref="Documents"/>
-    long CreateEDMJRDocument(IDbConnection connection, IDbTransaction transaction, AuthorizationDrxEQI authorizationDrx, long rnEDMJR, ExchangeQueueItemDocument document, int mainDocument);
+    //long CreateEDMJRDocument();
+    //long CreateEDMJRDocument(IConnection connection, ITransaction transaction, AuthorizationDrxEQI authorizationDrx, long rnEDMJR, ExchangeQueueItemDocument document, int mainDocument);
 }

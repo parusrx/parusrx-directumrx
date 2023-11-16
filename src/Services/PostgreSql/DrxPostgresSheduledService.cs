@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Parusnik. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
+using Microsoft.Extensions.Logging;
 using Npgsql;
+using ParusRx.DirectumRx.Models;
 
 namespace ParusRx.DirectumRx.Services.PostgreSql;
 
@@ -68,103 +70,81 @@ public class DrxPostgresSheduledService : IDrxSheduledService
 
             var transaction = connection.BeginTransaction();
 
-            var paramCrn = new DynamicParameters();
-            paramCrn.Add("ncompany", authorizationDrxEQI.Company);
-            paramCrn.Add("scode", "DRXEDMJournal");
-            paramCrn.Add("ncrn", dbType: DbType.Int64, direction: ParameterDirection.Output);
-
-            connection.Execute("parus.find_root_catalog", paramCrn, commandType: CommandType.StoredProcedure);
-
-            if (long.TryParse(paramCrn.Get<Int64>("ncrn").ToString(), out var nCrn))
+            foreach (var exchangeQueueItem in exchangeQueueItems.ExchangeQueueItems)
             {
-                foreach (var exchangeQueueItem in exchangeQueueItems.ExchangeQueueItems)
+                var docMain = exchangeQueueItem.Attacheds.First(x => x.Main == 1);
+
+                /// Добавление записи в Журнал взаимодействия
+                using var drxedmjr = new NpgsqlCommand("SELECT parus.p_drxexchange_queue(@ncompany, @njur_pers, @ndrxconnect, @ndrxcompany, @scode, @stin, @strrc, @nemployee_id, @nbusinessunit_id, @sdescription, @siastate, @seastate, @slcstate, @snote)", connection);
+
+                drxedmjr.Parameters.AddWithValue("ncompany", authorizationDrxEQI.Company);
+                drxedmjr.Parameters.AddWithValue("njur_pers", authorizationDrxEQI.Jurpers);
+                drxedmjr.Parameters.AddWithValue("ndrxconnect", authorizationDrxEQI.ConnectRn);
+                drxedmjr.Parameters.AddWithValue("ndrxcompany", authorizationDrxEQI.BusinessUnitRn);
+                drxedmjr.Parameters.AddWithValue("scode", "DRXEDMJournal");
+                drxedmjr.Parameters.AddWithValue("stin", exchangeQueueItem.CounterpartyTIN.Any() ? exchangeQueueItem.CounterpartyTIN : string.Empty);
+                drxedmjr.Parameters.AddWithValue("strrc", exchangeQueueItem.CounterpartyTRRC.Any() ? exchangeQueueItem.CounterpartyTRRC : string.Empty);
+                drxedmjr.Parameters.AddWithValue("nemployee_id", exchangeQueueItem.EmployeeId);
+                drxedmjr.Parameters.AddWithValue("nbusinessunit_id", authorizationDrxEQI.BusinessUnitId);
+                drxedmjr.Parameters.AddWithValue("sdescription", exchangeQueueItem.Name);
+                drxedmjr.Parameters.AddWithValue("siastate", string.IsNullOrEmpty(docMain.InternalApprovalState) ? "None" : docMain.InternalApprovalState);
+                drxedmjr.Parameters.AddWithValue("seastate", string.IsNullOrEmpty(docMain.ExternalApprovalState) ? "None" : docMain.ExternalApprovalState);
+                drxedmjr.Parameters.AddWithValue("slcstate", string.IsNullOrEmpty(docMain.LifeCycleState) ? "None" : docMain.LifeCycleState);
+                drxedmjr.Parameters.AddWithValue("snote", string.IsNullOrWhiteSpace(exchangeQueueItem.Note) ? "Получен из системы  ЭДО DirectumRX." : exchangeQueueItem.Note);
+
+                using var reader_drxedmjr = await drxedmjr.ExecuteReaderAsync();
+                long nedmjr = 0;
+                while (await reader_drxedmjr.ReadAsync())
                 {
-                    var paramAGN = new DynamicParameters();
-                    paramAGN.Add("ncompany", authorizationDrxEQI.Company);
+                    nedmjr = reader_drxedmjr.GetFieldValue<long>(0);
+                }
+                await reader_drxedmjr.CloseAsync();
 
-                    long.TryParse(exchangeQueueItem.CounterpartyTIN, out var tin);
-                    long.TryParse(exchangeQueueItem.CounterpartyTRRC, out var trrc);
-
-                    if (tin != 0)
-                        paramAGN.Add("ntin", tin);
-                    else
-                        paramAGN.Add("ntin");
-
-                    if (trrc != 0)
-                        paramAGN.Add("ntrrc", trrc); 
-                    else
-                        paramAGN.Add("ntrrc");
-
-                    paramAGN.Add("nagnlist", dbType: DbType.Int64, direction: ParameterDirection.Output);
-
-                    connection.Execute("parus.find_drxagnlist_tin", paramAGN, commandType: CommandType.StoredProcedure);
-
-                    long.TryParse(paramAGN.Get<Int64>("nagnlist").ToString(), out var nAgent);
-
-                    ///// Поиск регистрационного номера сотрудника
-                    var paramEMP = new DynamicParameters();
-                    paramEMP.Add("ncompany", authorizationDrxEQI.Company);
-                    paramEMP.Add("ndrxconnect", authorizationDrxEQI.ConnectRn);
-                    paramEMP.Add("nemployee_id", exchangeQueueItem.EmployeeId);
-                    paramEMP.Add("nbusinessunit_id", authorizationDrxEQI.BusinessUnitId);
-                    paramEMP.Add("nemployee_rn", dbType: DbType.Int64, direction: ParameterDirection.Output);
-
-                    connection.Execute("parus.find_drxemployee_id", paramEMP, commandType: CommandType.StoredProcedure);
-
-                    long.TryParse(paramEMP.Get<Int64>("nemployee_rn").ToString(), out var nEmployeeRn);
-
-                    ///Запрос статуса пакета документа по жизненому циклу основного документа
-                    var paramLC = new DynamicParameters();
-                    paramLC.Add("siastate", exchangeQueueItem.LeadingDocument.InternalApprovalState);
-                    paramLC.Add("seastate", exchangeQueueItem.LeadingDocument.ExternalApprovalState);
-                    paramLC.Add("slcstate",exchangeQueueItem.LeadingDocument.LifeCycleState);
-                    if (tin != 0)
-                        paramLC.Add("nagent", tin);
-                    else
-                        paramLC.Add("nagent");
-                    paramLC.Add("nstatus", dbType: DbType.Int64, direction: ParameterDirection.Output);
-
-                    connection.Execute("parus.find_drxedmjr_life_cycle", paramLC, commandType: CommandType.StoredProcedure);
-
-                    long.TryParse(paramLC.Get<Int64>("nstatus").ToString(), out var nStatus);
-
-                    /// Добавление записи в Журнал взаимодействия
-                    var paramEDMJR = new DynamicParameters();
-                    paramEDMJR.Add("ncompany", authorizationDrxEQI.Company);
-                    paramEDMJR.Add("ncrn", nCrn);
-                    paramEDMJR.Add("njur_pers", authorizationDrxEQI.Jurpers);
-                    paramEDMJR.Add("drec_date");
-                    paramEDMJR.Add("ndocflow", 0);
-                    paramEDMJR.Add("sdescription", exchangeQueueItem.Name);
-                    paramEDMJR.Add("nstatus", nStatus == 0 ? 2 : nStatus);
-                    paramEDMJR.Add("nagent", nAgent != 0 ? nAgent : null);
-                    paramEDMJR.Add("snote", exchangeQueueItem.Note);
-                    paramEDMJR.Add("sauthid");
-                    paramEDMJR.Add("ndrxconnect", authorizationDrxEQI.ConnectRn);
-                    paramEDMJR.Add("ndrxcompany", authorizationDrxEQI.BusinessUnitRn);
-                    paramEDMJR.Add("ndrxemployee", nEmployeeRn != 0 ? nEmployeeRn : null);
-                    paramEDMJR.Add("nrn", dbType: DbType.Int64, direction: ParameterDirection.Output);
-
-                    connection.Execute("parus.p_drxedmjr_base_insert", paramEDMJR, commandType: CommandType.StoredProcedure);
-
-                    if (long.TryParse(paramEDMJR.Get<Int64>("nrn").ToString(), out var nEDMJR))
+                _logger.LogInformation("nedmjr = {0}", nedmjr);
+                if (nedmjr != 0)
+                {
+                    /// Добавление вложенных документов в спецификацию журнала взаимодействия с DirectuRX
+                    foreach (var attached in exchangeQueueItem.Attacheds)
                     {
-                        /// Добавление основного документа в спецификацию журнала взаимодействия с DirectuRX
-                        CreateEDMJRDocument(connection, transaction, authorizationDrxEQI, nEDMJR, exchangeQueueItem.LeadingDocument, 1);
+                        _logger.LogInformation("attached = {0}", attached.Name);
+                        /// Добавление записи в Журнал взаимодействия
+                        var drxedmjrdoc = new NpgsqlCommand("SELECT parus.p_drxexchange_queue_doc(@ncompany, @ndrxconnect, @nedmjr, @ndoc_id, @ndoc_type_id, @ndoc_kind_id, @ndoc_ctg_id, @ndoc_reg_id, @sdescription, @nmain, @sstate, @siastate, @seastate, @sfile_name, @bfile_content, @snote, @surl_api)", connection);
+                        //using var drxedmjrdoc = new NpgsqlCommand("SELECT parus.p_drxexchange_queue_doc(@ncompany)", connection);
 
-                        /// Добавление дополнительных документов в спецификацию журнала взаимодействия с DirectuRX
-                        foreach (var attachment in exchangeQueueItem.Attachments)
+                        drxedmjrdoc.Parameters.AddWithValue("ncompany", authorizationDrxEQI.Company);
+                        drxedmjrdoc.Parameters.AddWithValue("ndrxconnect", authorizationDrxEQI.ConnectRn);
+                        drxedmjrdoc.Parameters.AddWithValue("nedmjr", nedmjr);
+                        drxedmjrdoc.Parameters.AddWithValue("ndoc_id", attached.Id);
+                        drxedmjrdoc.Parameters.AddWithValue("ndoc_type_id", attached.DocumentTypeId);
+                        drxedmjrdoc.Parameters.AddWithValue("ndoc_kind_id", attached.DocumentKindId);
+                        drxedmjrdoc.Parameters.AddWithValue("ndoc_ctg_id", attached.DocumentGroupId.HasValue ? attached.DocumentGroupId.Value : DBNull.Value);
+                        drxedmjrdoc.Parameters.AddWithValue("ndoc_reg_id", attached.DocumentRegisterId.HasValue ? attached.DocumentRegisterId.Value : DBNull.Value);
+                        drxedmjrdoc.Parameters.AddWithValue("sdescription", attached.Name);
+                        drxedmjrdoc.Parameters.AddWithValue("nmain", Convert.ToInt64(attached.Main));
+                        drxedmjrdoc.Parameters.AddWithValue("sstate", string.IsNullOrEmpty(attached.LifeCycleState) ? "None" : attached.LifeCycleState);
+                        drxedmjrdoc.Parameters.AddWithValue("siastate", string.IsNullOrEmpty(attached.InternalApprovalState) ? "None" : attached.InternalApprovalState);
+                        drxedmjrdoc.Parameters.AddWithValue("seastate", string.IsNullOrEmpty(attached.ExternalApprovalState) ? "None" : attached.ExternalApprovalState);
+                        drxedmjrdoc.Parameters.AddWithValue("sfile_name", attached.Name);
+                        drxedmjrdoc.Parameters.AddWithValue("bfile_content", attached.Body);
+                        drxedmjrdoc.Parameters.AddWithValue("snote", string.IsNullOrWhiteSpace(attached.Note) ? "Получен из системы  ЭДО DirectumRX." : attached.Note);
+                        drxedmjrdoc.Parameters.AddWithValue("surl_api", attached.Link);
+
+                        using var reader_drxedmjrdoc = await drxedmjrdoc.ExecuteReaderAsync();
                         {
-                            CreateEDMJRDocument(connection, transaction, authorizationDrxEQI, nEDMJR, attachment, 0);
+                            long nedmjrdoc = 0;
+                            while (await reader_drxedmjrdoc.ReadAsync())
+                            {
+                                nedmjrdoc = reader_drxedmjrdoc.GetFieldValue<long>(0);
+                                _logger.LogInformation("nedmjrdoc = {0}", nedmjrdoc);
+                            }
                         }
                     }
-
-                    _drxPartyService.PostExchangeQueueItemAsync(authorizationDrxEQI, exchangeQueueItem.Id, nEDMJR);
-
                 }
+
+                await _drxPartyService.PostExchangeQueueItemAsync(authorizationDrxEQI, exchangeQueueItem.Id, nedmjr);
             }
 
-            transaction.Commit();
+            await transaction.CommitAsync();
             return "Ok";
         }
         catch (Exception ex)
@@ -173,160 +153,5 @@ public class DrxPostgresSheduledService : IDrxSheduledService
             throw;
         }
 
-    }
-
-    /// <inheritdoc/>
-    public long GetRnDocumentType(IDbConnection connection, IDbTransaction transaction, long drxConnectRn, int documentTypeId)
-    {
-        try
-        {
-            /// Получить регистрационную запись типа документа
-            var paramDTYPE = new DynamicParameters();
-            paramDTYPE.Add("nflag_smart", 0);
-            paramDTYPE.Add("ndrxconnect", drxConnectRn);
-            paramDTYPE.Add("nid", documentTypeId);
-            paramDTYPE.Add("nrn", dbType: DbType.Int64, direction: ParameterDirection.Output);
-
-            connection.Execute("parus.find_drxdoctype_id", paramDTYPE, commandType: CommandType.StoredProcedure);
-
-            long.TryParse(paramDTYPE.Get<Int64>("nrn").ToString(), out long rnDocType);
-            return rnDocType;
-        }
-
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while performing the process of obtaining the ."); // <------------
-            return 0;
-        }
-    }
-
-    /// <inheritdoc/>
-    public long GetRnDocumentKind(IDbConnection connection, IDbTransaction transaction, long drxConnectRn, long drxDocTypeRn, int documentKindId)
-    {
-        try
-        {
-            /// Получить регистрационную запись вида документа
-            var paramDKIND = new DynamicParameters();
-            paramDKIND.Add("nflag_smart", 0);
-            paramDKIND.Add("ndrxconnect", drxConnectRn);
-            paramDKIND.Add("ndrxdoctype", drxDocTypeRn);
-            paramDKIND.Add("nid", documentKindId);
-            paramDKIND.Add("nrn", dbType: DbType.Int64, direction: ParameterDirection.Output);
-
-            connection.Execute("parus.find_drxdockind_id", paramDKIND, commandType: CommandType.StoredProcedure);
-
-            long.TryParse(paramDKIND.Get<Int64>("nrn").ToString(), out long rnDocKind);
-            return rnDocKind;
-        }
-
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while performing the process of obtaining the ."); // <------------
-            return 0;
-        }
-    }
-
-    /// <inheritdoc/>
-    public long GetRnDocumentCategory(IDbConnection connection, IDbTransaction transaction, long drxConnectRn, int documentCategoryId)
-    {
-        try
-        {
-            /// Получить регистрационную запись категории документа
-            var paramDCTG = new DynamicParameters();
-            paramDCTG.Add("nflag_smart", 0);
-            paramDCTG.Add("ndrxconnect", drxConnectRn);
-            paramDCTG.Add("nid", documentCategoryId);
-            paramDCTG.Add("nrn", dbType: DbType.Int64, direction: ParameterDirection.Output);
-
-            connection.Execute("parus.find_drxdocctg_id", paramDCTG, commandType: CommandType.StoredProcedure);
-
-            long.TryParse(paramDCTG.Get<Int64>("nrn").ToString(), out long rnDocCtg);
-            return rnDocCtg;
-        }
-
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while performing the process of obtaining the ."); // <------------
-            return 0;
-        }
-    }
-
-    /// <inheritdoc/>
-    public long GetRnDocumentRegister(IDbConnection connection, IDbTransaction transaction, long drxConnectRn, int documentRegisterId)
-    {
-        try
-        {
-            /// Получить регистрационную запись журнала регистрации документа
-            var param = new DynamicParameters();
-            param.Add("nflag_smart", 0);
-            param.Add("ndrxconnect", drxConnectRn);
-            param.Add("nid", documentRegisterId);
-            param.Add("nrn", dbType: DbType.Int64, direction: ParameterDirection.Output);
-
-            connection.Execute("parus.find_drxdocreg_id", param, commandType: CommandType.StoredProcedure);
-
-            long.TryParse(param.Get<Int64>("nrn").ToString(), out long rnDocReg);
-            return rnDocReg;
-        }
-
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while performing the process of obtaining the ."); // <------------
-            return 0;
-        }
-    }
-
-    public long CreateEDMJRDocument(IDbConnection connection, IDbTransaction transaction, AuthorizationDrxEQI authorizationDrx, long rnEDMJR, ExchangeQueueItemDocument document, int mainDocument)
-    {
-        try
-        {
-            /// Получить регистрационную запись типа документа
-            var rnDocType = GetRnDocumentType(connection, transaction, authorizationDrx.ConnectRn, document.DocumentTypeId);
-
-            /// Получить регистрационную запись вида документа
-            var rnDocKind = GetRnDocumentKind(connection, transaction, authorizationDrx.Company, rnDocType, document.DocumentKindId);
-
-            /// Получить регистрационную запись категории документа
-            long rnDocCtg = 0;
-            if (document.DocumentGroupId.HasValue)
-                rnDocCtg = GetRnDocumentCategory(connection, transaction, authorizationDrx.ConnectRn, document.DocumentGroupId.Value);
-
-            /// Получить регистрационную запись журнала регистрации документа
-            long rnDocReg = 0;
-            if (document.DocumentGroupId.HasValue)
-                rnDocReg = GetRnDocumentRegister(connection, transaction, authorizationDrx.ConnectRn, document.DocumentRegisterId.Value);
-
-            /// Получить регистрационную запись типа документа
-            var paramDOC = new DynamicParameters();
-            paramDOC.Add("ncompany", authorizationDrx.Company);
-            paramDOC.Add("nprn", rnEDMJR);
-            paramDOC.Add("ndocnumb");
-            paramDOC.Add("nid", document.Id);
-            paramDOC.Add("sdescription", document.Name);
-            paramDOC.Add("nmain", mainDocument);
-            paramDOC.Add("ddate_change");
-            paramDOC.Add("ndrxdoctype", rnDocType);
-            paramDOC.Add("ndrxdockind", rnDocKind);
-            paramDOC.Add("ndrxdocctg", rnDocCtg != 0 ? rnDocCtg : null);
-            paramDOC.Add("ndrxdocreg", rnDocReg != 0 ? rnDocReg : null);
-            paramDOC.Add("sstate", string.IsNullOrEmpty(document.LifeCycleState) ? "None" : document.LifeCycleState);
-            paramDOC.Add("sintapprstate", string.IsNullOrEmpty(document.InternalApprovalState) ? "None" : document.InternalApprovalState);
-            paramDOC.Add("sextapprstate", string.IsNullOrEmpty(document.ExternalApprovalState) ? "None" : document.ExternalApprovalState);
-            paramDOC.Add("sfile_name", document.Name);
-            paramDOC.Add("sfile_content", document.Body);
-            paramDOC.Add("snote", document.Note);
-            paramDOC.Add("surl_api", document.Link);
-            paramDOC.Add("nrn", dbType: DbType.Int64, direction: ParameterDirection.Output);
-
-            connection.Execute("parus.p_drxedmjrdoc_base_insert", paramDOC, commandType: CommandType.StoredProcedure);
-
-            long.TryParse(paramDOC.Get<Int64>("nrn").ToString(), out long rnEDMJRDoc);
-            return rnEDMJRDoc;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while performing the process of obtaining the ."); // <------------
-            return 0;
-        }
     }
 }
