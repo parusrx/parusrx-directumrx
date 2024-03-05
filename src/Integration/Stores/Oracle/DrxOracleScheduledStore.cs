@@ -36,7 +36,7 @@ public class DrxOracleScheduledStore : IDrxScheduledStore
             connection.Open();
             List<PostPackagesLifeCycle> listPackagesLifeCycle = new List<PostPackagesLifeCycle>();
             PostPackagesLifeCycle packagesLifeCycle = new PostPackagesLifeCycle();
-            var connects = await connection.QueryAsync<Authorization>("select c.url_api as Host, c.sysuser as Username, c.syspwd as Password, null as Token, c.rn as Rn from parus.drxconnect c where state = 1");
+            var connects = await connection.QueryAsync<Authorization>("select c.url_api as Host, c.sysuser as Username, c.syspwd as Password, null as Token, c.rn as Rn from parus.drxconnect c where c.state = 1");
 
             if (connects.Any())
             {

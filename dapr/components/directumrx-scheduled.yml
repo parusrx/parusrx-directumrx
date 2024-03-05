@@ -9,5 +9,3 @@ spec:
   metadata:
   - name: schedule
     value: "@every 1m"
-# scopes:
-# - directumrx
