@@ -1,5 +1,5 @@
-﻿// Copyright (c) Parusnik. All rights reserved.
-// Licensed under the MIT License. See LICENSE in the project root for license information.
+﻿// Copyright (c) Maxim Novichkov.
+// Licensed under the MIT License. See the LICENSE file in the project root for more information.
 
 using System.Net;
 
