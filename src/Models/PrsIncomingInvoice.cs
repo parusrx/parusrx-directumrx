@@ -15,7 +15,7 @@ public class IncomingInvoice
     /// </summary>
     [JsonPropertyName("Id")]
     [XmlElement(ElementName = "Id")]
-    public string Id { get; set; }
+    public long Id { get; set; }
     /// <summary>
     /// Document registration number Parus 8
     /// </summary>
@@ -33,7 +33,7 @@ public class IncomingInvoice
     /// </summary>
     [JsonPropertyName("DocumentKind")]
     [XmlElement(ElementName = "DocumentKind")]
-    public string DocumentKind { get; set; }
+    public long DocumentKind { get; set; }
     /// <summary>
     /// Subject
     /// </summary>

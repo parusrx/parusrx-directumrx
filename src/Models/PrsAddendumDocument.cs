@@ -14,7 +14,7 @@ public class AddendumDocument
     /// Document identification number
     /// </summary>
     [XmlElement(ElementName = "Id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
     /// <summary>
     /// Document registration number Parus 8
     /// </summary>
@@ -29,7 +29,7 @@ public class AddendumDocument
     /// Id document kind
     /// </summary>
     [XmlElement(ElementName = "DocumentKind")]
-    public int DocumentKind { get; set; }
+    public long DocumentKind { get; set; }
     /// <summary>
     /// Subject
     /// </summary>

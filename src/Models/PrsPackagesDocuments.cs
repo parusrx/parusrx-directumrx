@@ -117,9 +117,9 @@ public class PackageDocument
     /// <summary>
     /// Contract Statement
     ///</summary>
-    [JsonPropertyName("DocRelatedToWorks")]
-    [XmlArray(ElementName = "DocRelatedToWorks")]
-    [XmlArrayItem(ElementName = "DocRelatedToWork")]
-    public List<DocRelatedToWork>? DocRelatedToWorks { get; set; }
+    //[JsonPropertyName("DocRelatedToWorks")]
+    //[XmlArray(ElementName = "DocRelatedToWorks")]
+    //[XmlArrayItem(ElementName = "DocRelatedToWork")]
+    //public List<DocRelatedToWork>? DocRelatedToWorks { get; set; }
 }
 

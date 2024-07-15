@@ -199,7 +199,7 @@ public class DrxOracleSheduledService : IDrxSheduledService
 
                 if (long.TryParse(paramEDMJR.Value.ToString(), out var nEDMJR))
                 {
-                    _logger.LogInformation(string.Format("nEDMJR = {0}", nEDMJR));
+                    //_logger.LogInformation(string.Format("nEDMJR = {0}", nEDMJR));
                     /// Добавление документов в спецификацию журнала взаимодействия с DirectuRX
                     foreach (var attached in exchangeQueueItem.Attacheds)
                     {

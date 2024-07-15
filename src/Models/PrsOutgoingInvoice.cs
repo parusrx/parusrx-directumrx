@@ -15,7 +15,7 @@ public class OutgoingInvoice
     /// </summary>
     [JsonPropertyName("Id")]
     [XmlElement(ElementName = "Id")]
-    public string Id { get; set; }
+    public long Id { get; set; }
     /// <summary>
     /// Document registration number Parus 8
     /// </summary>
@@ -33,7 +33,7 @@ public class OutgoingInvoice
     /// </summary>
     [JsonPropertyName("DocumentKind")]
     [XmlElement(ElementName = "DocumentKind")]
-    public int DocumentKind { get; set; }
+    public long DocumentKind { get; set; }
     /// <summary>
     /// Gets or sets the pref and numb of the Outgoing Invoices.
     /// </summary>
