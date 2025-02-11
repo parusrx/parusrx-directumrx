@@ -3,6 +3,8 @@
 
 using ParusRx.DirectumRx.Integration.Stores;
 using Serilog;
+using System;
+
 public static partial class Program
 {
     public const string AppName = "DirectumRx";
@@ -133,7 +135,12 @@ public static partial class Program
     /// <param name="builder">The <see cref="WebApplicationBuilder"/>.</param>
     public static void AddCustomApplicationServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddHttpClient<IDrxPartyService, DrxPartyService>();
+        builder.Services.AddHttpClient<IDrxPartyService, DrxPartyService>()
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ClientCertificateOptions = ClientCertificateOption.Manual,
+                ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true
+            });
 
         var provider = builder.Configuration["Database:Provider"];
 
