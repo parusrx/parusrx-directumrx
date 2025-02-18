@@ -115,7 +115,7 @@ public class PackageDocument
     [XmlArrayItem(ElementName = "ContractStatement")]
     public List<ContractStatement>? ContractStatements { get; set; }
     /// <summary>
-    /// Contract Statement
+    /// Document related to works
     ///</summary>
     [JsonPropertyName("DocRelatedToWorks")]
     [XmlArray(ElementName = "DocRelatedToWorks")]
