@@ -22,10 +22,10 @@ public class DrxPartyService : IDrxPartyService
         ILogger<DrxPartyService> logger)
     {
         _httpClient = httpClient;
-        _jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
-        {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-        };
+        //_jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+        //{
+        //    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        //};
         _logger = logger;
     }
 
@@ -89,7 +89,7 @@ public class DrxPartyService : IDrxPartyService
     public async Task<PackagesLifeCycle> FindPackagesAsync(PostPackages packages)
     {
         var content = new StringContent(JsonSerializer.Serialize(packages.PackagesDto, _jsonSerializerOptions), Encoding.UTF8, "application/json");
-        //_logger.LogInformation(content.ReadAsStringAsync().Result);
+        _logger.LogInformation(content.ReadAsStringAsync().Result);
         var request = new HttpRequestMessage(HttpMethod.Post, $"{packages.Authorization?.Host}/odata/Integration/PostPackages");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", packages.Authorization?.Token);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
