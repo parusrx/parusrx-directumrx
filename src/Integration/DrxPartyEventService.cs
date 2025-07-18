@@ -160,7 +160,6 @@ public class DrxPartyEventService : IDrxPartyEventService
         catch (Exception ex)
         {
             await _store.ErrorAsync(id, ex.Message);
-
             _logger.LogError(ex, "EXCEPTION ERROR: {message}", ex.Message);
             _logger.LogDebug(id, ex, "EXCEPTION DEBUG: {message}", ex.Message);
         }

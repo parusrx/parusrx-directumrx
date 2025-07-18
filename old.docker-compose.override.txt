@@ -17,15 +17,16 @@ services:
     image: parusrx/gateway:dev
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - Serilog__MinimumLevel__Default=Warning
+      - ASPNETCORE_URLS=http://0.0.0.0:80
       - PATH_BASE=/gateway
     ports:
-      - "51001:8080"
+      - "51001:80"
 
   gateway-dapr:
+    image: "daprio/daprd:1.12.0"
     command: ["./daprd",
       "-app-id", "gateway",
-      "-app-port", "8080",
+      "-app-port", "80",
       "-components-path", "/components",
       "-config", "/configuration/config.yml"
       ]
@@ -36,7 +37,7 @@ services:
   directumrx:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://*:80
+      - ASPNETCORE_URLS=http://0.0.0.0:80
       - TZ=${ORACLE_TZ:-Europe/Moscow}
       - Database__Provider=${DB_PROVIDER:-Oracle}
       - Database__ConnectionString=${DB_CONNECTION_STRING:-User Id=username;Password=password;Data Source=localhost:1521/meta8561}

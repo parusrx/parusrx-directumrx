@@ -13,6 +13,8 @@ public class PostPackages
     public Authorization Authorization { get; set; }
     [XmlElement(ElementName = "PackagesDto")]
     public PackagesDto PackagesDto { get; set; }
+    //[XmlElement(ElementName = "HRPro")]
+    //public bool HRPro { get; set; }
 }
 
 [XmlRoot("PackagesDto")]
@@ -114,6 +116,7 @@ public class PackageDocument
     [XmlArray(ElementName = "ContractStatements")]
     [XmlArrayItem(ElementName = "ContractStatement")]
     public List<ContractStatement>? ContractStatements { get; set; }
+
     /// <summary>
     /// Document related to works
     ///</summary>
@@ -122,4 +125,3 @@ public class PackageDocument
     [XmlArrayItem(ElementName = "DocRelatedToWork")]
     public List<DocRelatedToWork>? DocRelatedToWorks { get; set; }
 }
-

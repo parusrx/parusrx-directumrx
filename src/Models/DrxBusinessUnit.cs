@@ -35,7 +35,7 @@ public class DrxBusinessUnitRequest
 }
 
 /// <summary>
-/// Represents an Department.
+/// Represents an BusinessUnit.
 /// </summary>
 [XmlRoot(ElementName = "BusinessUnit")]
 
@@ -56,14 +56,36 @@ public class DrxBusinessUnit
     public string Sid { get; set; }
 
     /// <summary>
-    /// Gets or sets the department name.
+    /// Gets or sets the company name.
     /// </summary>
     [JsonPropertyName("Name")]
     [XmlElement(ElementName = "Name")]
     public string Name { get; set; }
 
     /// <summary>
-    /// Gets or sets the department status.
+    /// Gets or sets the company tin.
+    /// </summary>
+    [JsonPropertyName("Tin")]
+    [XmlElement(ElementName = "Tin")]
+    public string Tin { get; set; }
+
+    /// <summary>
+    /// Gets or sets the company trrc.
+    /// </summary>
+    [JsonPropertyName("Trrc")]
+    [XmlElement(ElementName = "Trrc")]
+    public string Trrc { get; set; }
+
+    /// <summary>
+    /// Gets or sets the company legal name.
+    /// </summary>
+    [JsonPropertyName("LegalName")]
+    [XmlElement(ElementName = "LegalName")]
+    public string LegalName { get; set; }
+    
+
+    /// <summary>
+    /// Gets or sets the company status.
     /// </summary>
     [JsonPropertyName("Status")]
     [XmlElement(ElementName = "Status")]

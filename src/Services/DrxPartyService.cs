@@ -47,7 +47,7 @@ public class DrxPartyService : IDrxPartyService
     public async Task<DrxBusinessUnitRequest> FindBusinessUnitAsync(BusinessUnitPartyRequest connectionsRequest)
     {
         var authorizationBytes = Encoding.UTF8.GetBytes($"{connectionsRequest?.Authorization?.Username}:{connectionsRequest?.Authorization?.Password}");
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{connectionsRequest?.Authorization?.Host}/odata/IBusinessUnits?$select=Id,Sid,Name,Status");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{connectionsRequest?.Authorization?.Host}/odata/IBusinessUnits?$select=Id,Sid,Name,LegalName,Tin,Trrc,Status");
         request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
