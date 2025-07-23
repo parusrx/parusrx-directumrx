@@ -49,6 +49,19 @@ public class DrxEventController : ControllerBase
     }
 
     /// <summary>
+    /// Get a person from DirectumRX.
+    /// </summary>
+    /// <param name="event">The <see cref="MqIntegrationEvent"/>.</param>
+    /// <returns>A <see cref="Task"/> that completes when processing has completed.</returns>
+    [HttpPost("person")]
+    [Topic(DAPR_PUBSUB_NAME, "DrxPersonPartyEvent")]
+    public async Task GetPerson(MqIntegrationEvent @event)
+    {
+        var handler = _serviceProvider.GetRequiredService<PersonHandler>();
+        await handler.HandleAsync(@event);
+    }
+
+    /// <summary>
     /// Get a employee from DirectumRX.
     /// </summary>
     /// <param name="event">The <see cref="MqIntegrationEvent"/>.</param>

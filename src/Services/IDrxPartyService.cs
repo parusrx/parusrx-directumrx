@@ -23,6 +23,13 @@ public interface IDrxPartyService
     Task<DrxBusinessUnitRequest> FindBusinessUnitAsync(BusinessUnitPartyRequest request);
 
     /// <summary>
+    /// Serialize the person party content to a byte array as an asynchronous operation.
+    /// </summary>
+    /// <param name="request">The <see cref="PersonPartyRequest"/>.</param>
+    /// <returns>The serialized value.</returns>
+    Task<DrxPersonRequest> FindPersonAsync(PersonPartyRequest request);
+
+    /// <summary>
     /// Serialize the employee party content to a byte array as an asynchronous operation.
     /// </summary>
     /// <param name="request">The <see cref="EmployeePartyRequest"/>.</param>

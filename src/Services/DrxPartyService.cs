@@ -58,6 +58,20 @@ public class DrxPartyService : IDrxPartyService
     }
 
     /// <inheritdoc/>
+    public async Task<DrxPersonRequest> FindPersonAsync(PersonPartyRequest connectionsRequest)
+    {
+        var authorizationBytes = Encoding.UTF8.GetBytes($"{connectionsRequest?.Authorization?.Username}:{connectionsRequest?.Authorization?.Password}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{connectionsRequest?.Authorization?.Host}/odata/IPersons?$select=Id,LastName,FirstName,MiddleName,Sex,DateOfBirth,TIN,INILA,Status");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
+        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        
+        var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadFromJsonAsync<DrxPersonRequest>(options: _jsonSerializerOptions);
+    }
+
+    /// <inheritdoc/>
     public async Task<DrxEmployeeRequest> FindEmployeeAsync(EmployeePartyRequest connectionsRequest)
     {
         var authorizationBytes = Encoding.UTF8.GetBytes($"{connectionsRequest?.Authorization?.Username}:{connectionsRequest?.Authorization?.Password}");
