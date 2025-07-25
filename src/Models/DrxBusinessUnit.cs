@@ -91,3 +91,18 @@ public class DrxBusinessUnit
     [XmlElement(ElementName = "Status")]
     public string Status { get; set; }
 }
+
+/// <summary>
+/// Represents an BusinessUnit.
+/// </summary>
+[XmlRoot(ElementName = "BusinessUnit")]
+
+public class DrxBusinessUnitId
+{
+    /// <summary>
+    /// Gets or sets the identifier of the company.
+    /// </summary>
+    [JsonPropertyName("Id")]
+    [XmlElement(ElementName = "Id")]
+    public int Id { get; set; }
+}

@@ -30,6 +30,13 @@ public interface IDrxPartyService
     Task<DrxPersonRequest> FindPersonAsync(PersonPartyRequest request);
 
     /// <summary>
+    /// Serialize the department party content to a byte array as an asynchronous operation.
+    /// </summary>
+    /// <param name="request">The <see cref="DepartmenPartyRequest"/>.</param>
+    /// <returns>The serialized value.</returns>
+    Task<DrxDepartmentRequest> FindDepartmentAsync(DepartmentPartyRequest request);
+
+    /// <summary>
     /// Serialize the employee party content to a byte array as an asynchronous operation.
     /// </summary>
     /// <param name="request">The <see cref="EmployeePartyRequest"/>.</param>

@@ -32,6 +32,13 @@ public interface IDrxPartyEventService
     Task FindPartyPersonAsync(MqIntegrationEvent request);
 
     /// <summary>
+    /// Serialize the department party content to a byte array as an asynchronous operation.
+    /// </summary>
+    /// <param name="request">The <see cref="MqIntegrationEvent"/>.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    Task FindPartyDepartmentAsync(MqIntegrationEvent request);
+
+    /// <summary>
     /// Serialize the employee party content to a byte array as an asynchronous operation.
     /// </summary>
     /// <param name="request">The <see cref="MqIntegrationEvent"/>.</param>

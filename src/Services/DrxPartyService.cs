@@ -72,6 +72,20 @@ public class DrxPartyService : IDrxPartyService
     }
 
     /// <inheritdoc/>
+    public async Task<DrxDepartmentRequest> FindDepartmentAsync(DepartmentPartyRequest connectionsRequest)
+    {
+        var authorizationBytes = Encoding.UTF8.GetBytes($"{connectionsRequest?.Authorization?.Username}:{connectionsRequest?.Authorization?.Password}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{connectionsRequest?.Authorization?.Host}/odata/IDepartments?$select=Id,Name,Status&$expand=BusinessUnit($select=Id)&$filter=BusinessUnit/Id eq {connectionsRequest?.BusinessUnit.Value}");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
+        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadFromJsonAsync<DrxDepartmentRequest>(options: _jsonSerializerOptions);
+    }
+
+    /// <inheritdoc/>
     public async Task<DrxEmployeeRequest> FindEmployeeAsync(EmployeePartyRequest connectionsRequest)
     {
         var authorizationBytes = Encoding.UTF8.GetBytes($"{connectionsRequest?.Authorization?.Username}:{connectionsRequest?.Authorization?.Password}");

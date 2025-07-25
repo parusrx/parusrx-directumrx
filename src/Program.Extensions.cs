@@ -161,6 +161,7 @@ public static partial class Program
         builder.Services.AddTransient<ConnectHandler>();
         builder.Services.AddTransient<BusinessUnitHandler>();
         builder.Services.AddTransient<PersonHandler>();
+        builder.Services.AddTransient<DepartmentHandler>();
         builder.Services.AddTransient<EmployeeHandler>();
         builder.Services.AddTransient<DocumentTypeKindHandler>();
         builder.Services.AddTransient<PackagesLifeCycleStateHandler>();
