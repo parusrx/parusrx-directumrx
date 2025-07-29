@@ -37,6 +37,13 @@ public interface IDrxPartyService
     Task<DrxDepartmentRequest> FindDepartmentAsync(DepartmentPartyRequest request);
 
     /// <summary>
+    /// Serialize the job title party content to a byte array as an asynchronous operation.
+    /// </summary>
+    /// <param name="request">The <see cref="DepartmenPartyRequest"/>.</param>
+    /// <returns>The serialized value.</returns>
+    Task<DrxJobTitleRequest> FindJobTitleAsync(JobTitlePartyRequest request);
+
+    /// <summary>
     /// Serialize the employee party content to a byte array as an asynchronous operation.
     /// </summary>
     /// <param name="request">The <see cref="EmployeePartyRequest"/>.</param>

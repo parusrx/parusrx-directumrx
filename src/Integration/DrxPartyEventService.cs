@@ -140,6 +140,35 @@ public class DrxPartyEventService : IDrxPartyEventService
     }
 
     /// <inheritdoc/>
+    public async Task FindPartyJobTitleAsync(MqIntegrationEvent @event)
+    {
+        var id = @event.Body;
+
+        try
+        {
+            var data = await _store.ReadDataRequestAsync(id);
+
+            var jobTitlePartyRequest = XmlSerializerUtility.Deserialize<JobTitlePartyRequest>(data);
+            if (jobTitlePartyRequest == null)
+            {
+                throw new ArgumentException("Invalid request.");
+            }
+
+            var response = await _service.FindJobTitleAsync(jobTitlePartyRequest);
+            var responseContent = XmlSerializerUtility.Serialize(response);
+
+            await _store.SaveDataResponseAsync(id, responseContent);
+        }
+        catch (Exception ex)
+        {
+            await _store.ErrorAsync(id, ex.Message);
+
+            _logger.LogError(ex, "EXCEPTION ERROR: {message}", ex.Message);
+            _logger.LogDebug(id, ex, "EXCEPTION DEBUG: {message}", ex.Message);
+        }
+    }
+
+    /// <inheritdoc/>
     public async Task FindPartyEmployeeAsync(MqIntegrationEvent @event)
     {
         var id = @event.Body;

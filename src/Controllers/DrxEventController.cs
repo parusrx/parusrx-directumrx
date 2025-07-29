@@ -75,6 +75,19 @@ public class DrxEventController : ControllerBase
     }
 
     /// <summary>
+    /// Get a job title from DirectumRX.
+    /// </summary>
+    /// <param name="event">The <see cref="MqIntegrationEvent"/>.</param>
+    /// <returns>A <see cref="Task"/> that completes when processing has completed.</returns>
+    [HttpPost("jobtitle")]
+    [Topic(DAPR_PUBSUB_NAME, "DrxJobTitlePartyEvent")]
+    public async Task GetJobTitle(MqIntegrationEvent @event)
+    {
+        var handler = _serviceProvider.GetRequiredService<JobTitleHandler>();
+        await handler.HandleAsync(@event);
+    }
+
+    /// <summary>
     /// Get a employee from DirectumRX.
     /// </summary>
     /// <param name="event">The <see cref="MqIntegrationEvent"/>.</param>
