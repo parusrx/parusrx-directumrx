@@ -73,7 +73,7 @@ public class DrxJobTitleSync
     /// </summary>
     [JsonPropertyName("Department")]
     [XmlElement(ElementName = "Department")]
-    public DrxDepartmentId Department { get; set; }
+    public DrxDepartment Department { get; set; }
 }
 
 /// <summary>
@@ -88,11 +88,4 @@ public class DrxJobTitle
     [JsonPropertyName("Id")]
     [XmlElement(ElementName = "Id")]
     public int Id { get; set; }
-
-    /// <summary>
-    /// Gets or sets the job title name.
-    /// </summary>
-    [JsonPropertyName("Name")]
-    [XmlElement(ElementName = "Name")]
-    public string Name { get; set; }
 }

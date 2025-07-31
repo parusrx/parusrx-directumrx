@@ -53,20 +53,6 @@ public class DrxDepartment
     [JsonPropertyName("Id")]
     [XmlElement(ElementName = "Id")]
     public int Id { get; set; }
-
-    /// <summary>
-    /// Gets or sets the department name.
-    /// </summary>
-    [JsonPropertyName("Name")]
-    [XmlElement(ElementName = "Name")]
-    public string Name { get; set; }
-
-    /// <summary>
-    /// Gets or sets the business unit of the departmen.
-    /// </summary>
-    [JsonPropertyName("BusinessUnit")]
-    [XmlElement(ElementName = "BusinessUnit")]
-    public DrxBusinessUnit BusinessUnit { get; set; }
 }
 
 /// <summary>
@@ -103,19 +89,4 @@ public class DrxDepartmentSync
     [JsonPropertyName("BusinessUnit")]
     [XmlElement(ElementName = "BusinessUnit")]
     public DrxBusinessUnitId BusinessUnit { get; set; }
-}
-
-/// <summary>
-/// Represents an Departmen.
-/// </summary>
-[XmlRoot(ElementName = "Department")]
-
-public class DrxDepartmentId
-{
-    /// <summary>
-    /// Gets or sets the identifier of the department.
-    /// </summary>
-    [JsonPropertyName("Id")]
-    [XmlElement(ElementName = "Id")]
-    public int Id { get; set; }
 }

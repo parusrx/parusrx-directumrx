@@ -67,14 +67,14 @@ public class DrxEmployee
     public string PersonnelNumber { get; set; }
 
     /// <summary>
-    /// Gets or sets the personnel number of the employee.
+    /// Gets or sets the status of the employee.
     /// </summary>
     [JsonPropertyName("Status")]
     [XmlElement(ElementName = "Status")]
     public string Status { get; set; }
 
     /// <summary>
-    /// Gets or sets the department of the employee.
+    /// Gets or sets the login of the employee.
     /// </summary>
     [JsonPropertyName("Login")]
     [XmlElement(ElementName = "Login")]
