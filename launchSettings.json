@@ -4,7 +4,13 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "directumrx": "StartDebugging"
+        "directumrx": "StartDebugging",
+        "dapr-placement": "StartWithoutDebugging",
+        "directumrx-dapr": "StartWithoutDebugging",
+        "gateway": "StartWithoutDebugging",
+        "gateway-dapr": "StartWithoutDebugging",
+        "rabbitmq": "StartWithoutDebugging",
+        "zipkin": "StartWithoutDebugging"
       }
     }
   }

@@ -103,7 +103,7 @@ public class DrxPartyService : IDrxPartyService
     public async Task<DrxEmployeeRequest> FindEmployeeAsync(EmployeePartyRequest connectionsRequest)
     {
         var authorizationBytes = Encoding.UTF8.GetBytes($"{connectionsRequest?.Authorization?.Username}:{connectionsRequest?.Authorization?.Password}");
-        using var request = new HttpRequestMessage(HttpMethod.Get, $"{connectionsRequest?.Authorization?.Host}/odata/IEmployees?$filter=Department/BusinessUnit/Id eq {connectionsRequest?.BusinessUnit.Value} &$select=Id,Name,PersonnelNumber,Status&$expand=Login($select=Id,LoginName),Department($select=Id),JobTitle($select=Id),Person($select=Id,LastName,FirstName,MiddleName)");
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"{connectionsRequest?.Authorization?.Host}/odata/IEmployees?$select=Id,Name,PersonnelNumber,Status&$expand=Login($select=Id,LoginName),Department($select=Id;$expand=BusinessUnit($select=Id)),JobTitle($select=Id),Person($select=Id,LastName,FirstName,MiddleName)&$filter=Department/BusinessUnit/Id eq {connectionsRequest?.BusinessUnit.Value}");
         request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
