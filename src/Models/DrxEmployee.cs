@@ -7,7 +7,6 @@ namespace ParusRx.DirectumRx.Models;
 /// Represents a request body to DirectumRX.
 /// </summary>
 [XmlRoot(ElementName = "DrxEmployeePartyRequest")]
-
 public class EmployeePartyRequest
 {
     /// <summary>
@@ -27,7 +26,6 @@ public class EmployeePartyRequest
 /// Represents a status connection.
 /// </summary>
 [XmlRoot(ElementName = "DrxEmployeeRequest")]
-
 public class DrxEmployeeRequest
 {
     /// <summary>
@@ -100,4 +98,88 @@ public class DrxEmployee
     [JsonPropertyName("Person")]
     [XmlElement(ElementName = "Person")]
     public DrxPerson Person { get; set; }
+}
+
+/// <summary>
+/// Represents an EmployeeModel .
+/// </summary>
+[XmlRoot(ElementName = "EmployeeModel ")]
+public class EmployeeModel
+{
+    /// <summary>
+    /// Gets or sets the additional properties of the employee.
+    /// </summary>
+    [JsonPropertyName("ObjectExtension")]
+    [XmlElement(ElementName = "ObjectExtension")]
+    public string ObjectExtension { get; set; }
+
+    /// <summary>
+    /// Gets or sets the identifier of the employee.
+    /// </summary>
+    [JsonPropertyName("Id")]
+    [XmlElement(ElementName = "Id")]
+    public long? Id { get; set; }
+
+    /// <summary>
+    /// Gets or sets the external id of the employee.
+    /// </summary>
+    [JsonPropertyName("ExternalId")]
+    [XmlElement(ElementName = "ExternalId")]
+    public string ExternalId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the person external id of the employee.
+    /// </summary>
+    [JsonPropertyName("PersonExternalId")]
+    [XmlElement(ElementName = "PersonExternalId")]
+    public string PersonExternalId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the job title external id of the employee.
+    /// </summary>
+    [JsonPropertyName("JobTitleExternalId")]
+    [XmlElement(ElementName = "JobTitleExternalId")]
+    public string JobTitleExternalId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the department external id of the employee.
+    /// </summary>
+    [JsonPropertyName("DepartmentExternalId")]
+    [XmlElement(ElementName = "DepartmentExternalId")]
+    public string DepartmentExternalId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the personal phone of the employee.
+    /// </summary>
+    [JsonPropertyName("PersonalPhone")]
+    [XmlElement(ElementName = "PersonalPhone")]
+    public string PersonalPhone { get; set; }
+
+    /// <summary>
+    /// Gets or sets the notification email of the employee.
+    /// </summary>
+    [JsonPropertyName("NotificationEmail")]
+    [XmlElement(ElementName = "NotificationEmail")]
+    public string NotificationEmail { get; set; }
+
+    /// <summary>
+    /// Gets or sets the employment type of the employee.
+    /// </summary>
+    [JsonPropertyName("EmploymentType")]
+    [XmlElement(ElementName = "EmploymentType")]
+    public string EmploymentType { get; set; }
+
+    /// <summary>
+    /// Gets or sets the personal account status of the employee.
+    /// </summary>
+    [JsonPropertyName("PersonalAccountStatus")]
+    [XmlElement(ElementName = "PersonalAccountStatus")]
+    public string PersonalAccountStatus { get; set; }
+
+    /// <summary>
+    /// Gets or sets the personnel number of the employee.
+    /// </summary>
+    [JsonPropertyName("PersonnelNumber")]
+    [XmlElement(ElementName = "PersonnelNumber")]
+    public string PersonnelNumber { get; set; }
 }

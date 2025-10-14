@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Maxim Novichkov.
 // Licensed under the MIT License. See the LICENSE file in the project root for more information.
 
+using Microsoft.Extensions.Logging;
+
 namespace ParusRx.DirectumRx.Integration;
 
 /// <summary>
@@ -240,6 +242,32 @@ public class DrxPartyEventService : IDrxPartyEventService
                 throw new ArgumentException("Invalid request.");
             }
             var response = await _service.FindPackagesAsync(PackagesPartyRequest);
+            var responseContent = XmlSerializerUtility.Serialize(response);
+
+            await _store.SaveDataResponseAsync(id, responseContent);
+        }
+        catch (Exception ex)
+        {
+            await _store.ErrorAsync(id, ex.Message);
+            _logger.LogError(ex, "EXCEPTION ERROR: {message}", ex.Message);
+            _logger.LogDebug(id, ex, "EXCEPTION DEBUG: {message}", ex.Message);
+        }
+    }
+
+    public async Task FindPartyBatchSyncAsync(MqIntegrationEvent @event)
+    {
+        var id = @event.Body;
+
+        try
+        {
+            var data = await _store.ReadDataRequestAsync(id);
+
+            var batchSyncRequest = XmlSerializerUtility.Deserialize<PostBatchSync>(data);
+            if (batchSyncRequest == null)
+            {
+                throw new ArgumentException("Invalid request.");
+            }
+            var response = await _service.FindBatchSyncAsync(batchSyncRequest);
             var responseContent = XmlSerializerUtility.Serialize(response);
 
             await _store.SaveDataResponseAsync(id, responseContent);

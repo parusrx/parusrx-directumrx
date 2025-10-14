@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Maxim Novichkov.
 // Licensed under the MIT License. See the LICENSE file in the project root for more information.
 
+using Microsoft.Extensions.Logging;
+
 namespace ParusRx.DirectumRx.Services;
 
 /// <summary>
@@ -131,7 +133,7 @@ public class DrxPartyService : IDrxPartyService
     public async Task<PackagesLifeCycle> FindPackagesAsync(PostPackages packages)
     {
         var content = new StringContent(JsonSerializer.Serialize(packages.PackagesDto, _jsonSerializerOptions), Encoding.UTF8, "application/json");
-        //_logger.LogInformation(content.ReadAsStringAsync().Result);
+        _logger.LogInformation(content.ReadAsStringAsync().Result);
         using var request = new HttpRequestMessage(HttpMethod.Post, $"{packages.Authorization?.Host}/odata/Integration/PostPackages");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", packages.Authorization?.Token);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -148,6 +150,33 @@ public class DrxPartyService : IDrxPartyService
             response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadFromJsonAsync<PackagesLifeCycle>(options: _jsonSerializerOptions);
+    }
+
+    /// <inheritdoc/>
+    public async Task<BatchSyncResult> FindBatchSyncAsync(PostBatchSync batchsync)
+    {
+        var authorizationBytes = Encoding.UTF8.GetBytes($"{batchsync.Authorization?.Username}:{batchsync.Authorization?.Password}");
+        var content = new StringContent(JsonSerializer.Serialize(batchsync.BatchSync, _jsonSerializerOptions), Encoding.UTF8, "application/json");
+        var value = content.ReadAsStringAsync().Result;
+        _logger.LogInformation($"Value: {value}");
+        var metod = string.Empty;
+        if (batchsync.HRPro)
+        {
+            metod = "/odata/ConnectorAC/BatchSync";
+        }
+        else if(!batchsync.HRPro)
+        {
+            metod = "/odata/Integration/BatchSync";
+        }
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"{batchsync.Authorization?.Host}{metod}");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
+        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        request.Content = content;
+
+        using var response = await _httpClient.SendAsync(request);
+        var value1 = response.Content.ReadAsStringAsync().Result;
+        _logger.LogInformation($"StatusCode: {response.StatusCode}; Value1: {value1}");
+        return await response.Content.ReadFromJsonAsync<BatchSyncResult>(options: _jsonSerializerOptions);
     }
 
     /// <inheritdoc/>

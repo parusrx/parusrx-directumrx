@@ -69,6 +69,13 @@ public interface IDrxPartyService
     /// </summary>
     /// <param name="packages">The <see cref="PackagesLifeCycle"/>.</param>
     /// <returns>The serialized value.</returns>
+    Task<BatchSyncResult> FindBatchSyncAsync(PostBatchSync batchsync);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="packages">The <see cref="PackagesLifeCycle"/>.</param>
+    /// <returns>The serialized value.</returns>
     Task<PackagesLifeCycle> FindPackagesLifeCycleAsync(PostPackagesLifeCycle packages);
 
     /// <summary>

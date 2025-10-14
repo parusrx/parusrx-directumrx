@@ -7,7 +7,6 @@ namespace ParusRx.DirectumRx.Models;
 /// Represents a request body to DirectumRX.
 /// </summary>
 [XmlRoot(ElementName = "DrxDepartmentPartyRequest")]
-
 public class DepartmentPartyRequest
 {
     /// <summary>
@@ -27,7 +26,6 @@ public class DepartmentPartyRequest
 /// Represents an Department.
 /// </summary>
 [XmlRoot(ElementName = "DrxDepartmentRequest")]
-
 public class DrxDepartmentRequest
 {
     /// <summary>
@@ -54,12 +52,10 @@ public class DrxDepartment
     [XmlElement(ElementName = "Id")]
     public int Id { get; set; }
 }
-
 /// <summary>
 /// Represents an Departmen.
 /// </summary>
 [XmlRoot(ElementName = "Department")]
-
 public class DrxDepartmentSync
 {
     /// <summary>
@@ -89,4 +85,68 @@ public class DrxDepartmentSync
     [JsonPropertyName("BusinessUnit")]
     [XmlElement(ElementName = "BusinessUnit")]
     public DrxBusinessUnitId BusinessUnit { get; set; }
+}
+
+/// <summary>
+/// Represents an Departmen.
+/// </summary>
+[XmlRoot(ElementName = "DepartmentModel ")]
+
+public class DepartmentModel
+{
+    /// <summary>
+    /// Gets or sets the additional properties of the department.
+    /// </summary>
+    [JsonPropertyName("ObjectExtension")]
+    [XmlElement(ElementName = "ObjectExtension")]
+    public string ObjectExtension { get; set; }
+
+    /// <summary>
+    /// Gets or sets the identifier of the department.
+    /// </summary>
+    [JsonPropertyName("Id")]
+    [XmlElement(ElementName = "Id")]
+    public long? Id { get; set; }
+
+    /// <summary>
+    /// Gets or sets the external id of the department.
+    /// </summary>
+    [JsonPropertyName("ExternalId")]
+    [XmlElement(ElementName = "ExternalId")]
+    public string ExternalId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the status of the department.
+    /// </summary>
+    [JsonPropertyName("Status")]
+    [XmlElement(ElementName = "Status")]
+    public string Status { get; set; }
+
+    /// <summary>
+    /// Gets or sets the name of the department.
+    /// </summary>
+    [JsonPropertyName("Name")]
+    [XmlElement(ElementName = "Name")]
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Gets or sets the business unit external id of the department.
+    /// </summary>
+    [JsonPropertyName("BusinessUnitExternalId")]
+    [XmlElement(ElementName = "BusinessUnitExternalId")]
+    public string BusinessUnitExternalId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the head office external id of the department.
+    /// </summary>
+    [JsonPropertyName("HeadOfficeExternalId")]
+    [XmlElement(ElementName = "HeadOfficeExternalId")]
+    public string HeadOfficeExternalId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the manager external id of the department.
+    /// </summary>
+    [JsonPropertyName("ManagerExternalId")]
+    [XmlElement(ElementName = "ManagerExternalId")]
+    public string ManagerExternalId { get; set; }
 }

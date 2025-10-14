@@ -168,6 +168,7 @@ public static partial class Program
         builder.Services.AddTransient<PackagesLifeCycleStateHandler>();
         builder.Services.AddTransient<UserTokenHandler>();
         builder.Services.AddTransient<PackagesHandler>();
+        builder.Services.AddTransient<BatchSyncHandler>();
         builder.Services.AddTransient<ContractCategoryHandler>();
         builder.Services.AddTransient<DocumentRegisterHandler>();
     }

@@ -89,3 +89,52 @@ public class DrxJobTitle
     [XmlElement(ElementName = "Id")]
     public int Id { get; set; }
 }
+
+/// <summary>
+/// Represents an JobTitleModel.
+/// </summary>
+[XmlRoot(ElementName = "JobTitleModel")]
+public class JobTitleModel
+{
+    /// <summary>
+    /// Gets or sets the additional properties of the job title.
+    /// </summary>
+    [JsonPropertyName("ObjectExtension")]
+    [XmlElement(ElementName = "ObjectExtension")]
+    public string ObjectExtension { get; set; }
+
+    /// <summary>
+    /// Gets or sets the identifier of the job title.
+    /// </summary>
+    [JsonPropertyName("Id")]
+    [XmlElement(ElementName = "Id")]
+    public long? Id { get; set; }
+
+    /// <summary>
+    /// Gets or sets the external id of the job title.
+    /// </summary>
+    [JsonPropertyName("ExternalId")]
+    [XmlElement(ElementName = "ExternalId")]
+    public string ExternalId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the status of the job title.
+    /// </summary>
+    [JsonPropertyName("Status")]
+    [XmlElement(ElementName = "Status")]
+    public string Status { get; set; }
+
+    /// <summary>
+    /// Gets or sets the name of the job title.
+    /// </summary>
+    [JsonPropertyName("Name")]
+    [XmlElement(ElementName = "Name")]
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Gets or sets the department external id of the job title.
+    /// </summary>
+    [JsonPropertyName("DepartmentExternalId")]
+    [XmlElement(ElementName = "DepartmentExternalId")]
+    public string DepartmentExternalId { get; set; }
+}

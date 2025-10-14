@@ -67,6 +67,13 @@ public interface IDrxPartyEventService
     Task FindPartyPackagesAsync(MqIntegrationEvent request);
 
     /// <summary>
+    /// Serialize the batch organizational structure synchronization party content to a byte array as an asynchronous operation.
+    /// </summary>
+    /// <param name="request">The <see cref="MqIntegrationEvent"/>.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    Task FindPartyBatchSyncAsync(MqIntegrationEvent request);
+
+    /// <summary>
     /// Serialize the documents packages party content to a byte array as an asynchronous operation.
     /// </summary>
     /// <param name="request">The <see cref="MqIntegrationEvent"/>.</param>

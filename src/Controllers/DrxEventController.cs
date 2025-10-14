@@ -23,6 +23,19 @@ public class DrxEventController : ControllerBase
     }
 
     /// <summary>
+    /// Post a batch organizational structure synchronization in DirectumRX.
+    /// </summary>
+    /// <param name="event">The <see cref="MqIntegrationEvent"/>.</param>
+    /// <returns>A <see cref="Task"/> that completes when processing has completed.</returns>
+    [HttpPost("batchsunc")]
+    [Topic(DAPR_PUBSUB_NAME, "DrxBatchSyncPartyEvent")]
+    public async Task PostBatchSync(MqIntegrationEvent @event)
+    {
+        var handler = _serviceProvider.GetRequiredService<BatchSyncHandler>();
+        await handler.HandleAsync(@event);
+    }
+
+    /// <summary>
     /// Retrieving a suggestions on a party.
     /// </summary>
     /// <param name="event">The <see cref="MqIntegrationEvent"/>.</param>

@@ -15,29 +15,66 @@ public class SysData
     /// </summary>
     [JsonPropertyName("BusinessUnit")]
     [XmlElement(ElementName = "BusinessUnit")]
-    public int? BusinessUnit { get; set; }
+    public long? BusinessUnit { get; set; }
     /// <summary>
     /// Gets or sets the employee of the system data.
     /// </summary>
     [JsonPropertyName("Employee")]
     [XmlElement(ElementName = "Employee")]
-    public int? Employee { get; set; }
+    public long? Employee { get; set; }
     /// <summary>
     /// Gets or sets the department of the system data.
     /// </summary>
     [JsonPropertyName("Department")]
     [XmlElement(ElementName = "Department")]
-    public int? Department { get; set; }
+    public long? Department { get; set; }
     /// <summary>
     /// Gets or sets the job title of the system data.
     /// </summary>
     [JsonPropertyName("JobTitle")]
     [XmlElement(ElementName = "JobTitle")]
-    public int? JobTitle { get; set; }
+    public long? JobTitle { get; set; }
     /// <summary>
     /// Gets or sets the login of the system data.
     /// </summary>
     [JsonPropertyName("Login")]
     [XmlElement(ElementName = "Login")]
-    public int? Login { get; set; }
+    public long? Login { get; set; }
+
+    /// <summary>
+    /// Gets or sets the signatory.
+    /// </summary>
+    [JsonPropertyName("Signatory")]
+    [XmlElement(ElementName = "Signatory")]
+    public long? Signatory { get; set; }
+
+    /// <summary>
+    /// Gets or sets the req. approvers.
+    /// </summary>
+    [JsonPropertyName("ReqApprovers")]
+    [XmlArray(ElementName = "ReqApprovers")]
+    [XmlArrayItem(ElementName = "ReqApprover")]
+    public List<Approvers>? ReqApprovers { get; set; }
+
+    /// <summary>
+    /// Gets or sets of add approvers.
+    /// </summary>
+    [JsonPropertyName("AddApprovers")]
+    [XmlArray(ElementName = "AddApprovers")]
+    [XmlArrayItem(ElementName = "AddApprover")]
+    public List<Approvers>? AddApprovers { get; set; }
+}
+
+/// <summary>
+/// Gets or sets of approvers
+/// </summary>
+[XmlRoot("Employee")]
+public class Approvers
+{
+    /// <summary>
+    /// Gets or sets the id employee.
+    /// </summary>
+    [JsonPropertyName("Employee")]
+    [XmlElement(ElementName = "Employee")]
+    public long Employee { get; set; }
 }
