@@ -133,7 +133,7 @@ public class DrxPartyService : IDrxPartyService
     public async Task<PackagesLifeCycle> FindPackagesAsync(PostPackages packages)
     {
         var content = new StringContent(JsonSerializer.Serialize(packages.PackagesDto, _jsonSerializerOptions), Encoding.UTF8, "application/json");
-        _logger.LogInformation(content.ReadAsStringAsync().Result);
+        //_logger.LogInformation(content.ReadAsStringAsync().Result);
         using var request = new HttpRequestMessage(HttpMethod.Post, $"{packages.Authorization?.Host}/odata/Integration/PostPackages");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", packages.Authorization?.Token);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -158,7 +158,7 @@ public class DrxPartyService : IDrxPartyService
         var authorizationBytes = Encoding.UTF8.GetBytes($"{batchsync.Authorization?.Username}:{batchsync.Authorization?.Password}");
         var content = new StringContent(JsonSerializer.Serialize(batchsync.BatchSync, _jsonSerializerOptions), Encoding.UTF8, "application/json");
         var value = content.ReadAsStringAsync().Result;
-        _logger.LogInformation($"Value: {value}");
+        //_logger.LogInformation($"Value: {value}");
         var metod = string.Empty;
         if (batchsync.HRPro)
         {
@@ -175,7 +175,7 @@ public class DrxPartyService : IDrxPartyService
 
         using var response = await _httpClient.SendAsync(request);
         var value1 = response.Content.ReadAsStringAsync().Result;
-        _logger.LogInformation($"StatusCode: {response.StatusCode}; Value1: {value1}");
+        //_logger.LogInformation($"StatusCode: {response.StatusCode}; Value1: {value1}");
         return await response.Content.ReadFromJsonAsync<BatchSyncResult>(options: _jsonSerializerOptions);
     }
 
