@@ -11,13 +11,19 @@ namespace ParusRx.DirectumRx.Models;
 public class Document
 {
     /// <summary>
-    /// Gets or sets the file name of the company.
+    /// Gets or sets the file name of the document.
     /// </summary>
     [JsonPropertyName("FileName")]
     [XmlElement(ElementName = "FileName")]
     public string FileName { get; set; }
     /// <summary>
-    /// Gets or sets the content of the company.
+    /// Gets or sets the document comment.
+    /// </summary>
+    [JsonPropertyName("DocumentComment")]
+    [XmlElement(ElementName = "DocumentComment")]
+    public string DocumentComment { get; set; }
+    /// <summary>
+    /// Gets or sets the content of the document.
     /// </summary>
     [JsonPropertyName("Content")]
     [XmlElement(ElementName = "Content")]

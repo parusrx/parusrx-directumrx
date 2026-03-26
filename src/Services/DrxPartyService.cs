@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See the LICENSE file in the project root for more information.
 
 using Microsoft.Extensions.Logging;
+using static Google.Rpc.Context.AttributeContext.Types;
 
 namespace ParusRx.DirectumRx.Services;
 
@@ -132,10 +133,11 @@ public class DrxPartyService : IDrxPartyService
     /// <inheritdoc/>
     public async Task<PackagesLifeCycle> FindPackagesAsync(PostPackages packages)
     {
+        var authorizationBytes = Encoding.UTF8.GetBytes($"{packages?.Authorization?.Username}:{packages?.Authorization?.Password}");
         var content = new StringContent(JsonSerializer.Serialize(packages.PackagesDto, _jsonSerializerOptions), Encoding.UTF8, "application/json");
         //_logger.LogInformation(content.ReadAsStringAsync().Result);
         using var request = new HttpRequestMessage(HttpMethod.Post, $"{packages.Authorization?.Host}/odata/Integration/PostPackages");
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", packages.Authorization?.Token);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         request.Content = content;
 
