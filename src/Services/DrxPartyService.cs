@@ -164,11 +164,25 @@ public class DrxPartyService : IDrxPartyService
             ? "/odata/ConnectorAC/BatchSync"
             : "/odata/Integration/BatchSync";
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, $"{batchsync.Authorization?.Host}{method}")
+        var requestUrl = $"{batchsync.Authorization?.Host}{method}";
+
+        var payload = JsonSerializer.Serialize(batchsync.BatchSync, _jsonSerializerOptions);
+
+        // Логируем исходящий JSON: сколько записей в каждом блоке и полный payload
+        _logger.LogInformation(
+            "BatchSync request to {Url}: People={People}, BusinessUnits={BusinessUnits}, " +
+            "Departments={Departments}, JobTitles={JobTitles}, Employees={Employees}",
+            requestUrl,
+            batchsync.BatchSync?.peopleModels?.Count ?? 0,
+            batchsync.BatchSync?.businessUnitsModels?.Count ?? 0,
+            batchsync.BatchSync?.departmentsModels?.Count ?? 0,
+            batchsync.BatchSync?.jobTitlesModels?.Count ?? 0,
+            batchsync.BatchSync?.employeesModels?.Count ?? 0);
+        _logger.LogInformation("BatchSync payload: {Payload}", payload);
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, requestUrl)
         {
-            Content = new StringContent(
-                JsonSerializer.Serialize(batchsync.BatchSync, _jsonSerializerOptions),
-                Encoding.UTF8, "application/json")
+            Content = new StringContent(payload, Encoding.UTF8, "application/json")
         };
         request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -182,10 +196,12 @@ public class DrxPartyService : IDrxPartyService
             throw new InvalidOperationException($"BatchSync failed: {(int)response.StatusCode}");
         }
 
-        _logger.LogInformation("BatchSync raw response: {Body}", raw); // временно, для отладки
+        _logger.LogInformation("BatchSync response: {Body}", raw);
+
         return JsonSerializer.Deserialize<BatchSyncResult>(raw, _jsonSerializerOptions)
             ?? throw new InvalidOperationException("BatchSync returned empty payload");
     }
+
 
     /// <inheritdoc/>
     public async Task<PackagesLifeCycle> FindPackagesLifeCycleAsync(PostPackagesLifeCycle packages)
