@@ -121,6 +121,13 @@ public class EmployeeModel
     public long? Id { get; set; }
 
     /// <summary>
+    /// Gets or sets the status of the employee.
+    /// </summary>
+    [JsonPropertyName("Status")]
+    [XmlElement(ElementName = "Status")]
+    public string Status { get; set; }
+
+    /// <summary>
     /// Gets or sets the external id of the employee.
     /// </summary>
     [JsonPropertyName("ExternalId")]

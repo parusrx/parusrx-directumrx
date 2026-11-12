@@ -157,28 +157,34 @@ public class DrxPartyService : IDrxPartyService
     /// <inheritdoc/>
     public async Task<BatchSyncResult> FindBatchSyncAsync(PostBatchSync batchsync)
     {
-        var authorizationBytes = Encoding.UTF8.GetBytes($"{batchsync.Authorization?.Username}:{batchsync.Authorization?.Password}");
-        var content = new StringContent(JsonSerializer.Serialize(batchsync.BatchSync, _jsonSerializerOptions), Encoding.UTF8, "application/json");
-        var value = content.ReadAsStringAsync().Result;
-        //_logger.LogInformation($"Value: {value}");
-        var metod = string.Empty;
-        if (batchsync.HRPro)
+        var authorizationBytes = Encoding.UTF8.GetBytes(
+            $"{batchsync.Authorization?.Username}:{batchsync.Authorization?.Password}");
+
+        var method = batchsync.HRPro
+            ? "/odata/ConnectorAC/BatchSync"
+            : "/odata/Integration/BatchSync";
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"{batchsync.Authorization?.Host}{method}")
         {
-            metod = "/odata/ConnectorAC/BatchSync";
-        }
-        else if(!batchsync.HRPro)
-        {
-            metod = "/odata/Integration/BatchSync";
-        }
-        using var request = new HttpRequestMessage(HttpMethod.Post, $"{batchsync.Authorization?.Host}{metod}");
+            Content = new StringContent(
+                JsonSerializer.Serialize(batchsync.BatchSync, _jsonSerializerOptions),
+                Encoding.UTF8, "application/json")
+        };
         request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        request.Content = content;
 
         using var response = await _httpClient.SendAsync(request);
-        var value1 = response.Content.ReadAsStringAsync().Result;
-        //_logger.LogInformation($"StatusCode: {response.StatusCode}; Value1: {value1}");
-        return await response.Content.ReadFromJsonAsync<BatchSyncResult>(options: _jsonSerializerOptions);
+        var raw = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("BatchSync failed: {StatusCode}, body: {Body}", (int)response.StatusCode, raw);
+            throw new InvalidOperationException($"BatchSync failed: {(int)response.StatusCode}");
+        }
+
+        _logger.LogInformation("BatchSync raw response: {Body}", raw); // временно, для отладки
+        return JsonSerializer.Deserialize<BatchSyncResult>(raw, _jsonSerializerOptions)
+            ?? throw new InvalidOperationException("BatchSync returned empty payload");
     }
 
     /// <inheritdoc/>
