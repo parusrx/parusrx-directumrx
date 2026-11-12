@@ -79,9 +79,9 @@ jobs:
         shell: bash
         working-directory: .
         run: |
-          sudo -E docker compose build ${{ env.SERVICE }}
+          docker compose build ${{ env.SERVICE }}
       - name: Compose push
         shell: bash
         working-directory: .
         run: | 
-          sudo -E docker compose push ${{ env.SERVICE }}
+          docker compose push ${{ env.SERVICE }}
